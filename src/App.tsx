@@ -5,13 +5,16 @@ import {
   ArrowDown, ArrowLeft, ArrowRight, Building2, CarFront, Check,
   ChevronDown, CircleDollarSign, Clock3, Home, Landmark, LockKeyhole,
   Menu, ShieldCheck, Sparkles, TrendingUp, UserRound, X,
-  Instagram, Facebook, MapPin, Mail, Phone, MessageCircle,
+  MapPin, Mail, Phone, MessageCircle,
 } from 'lucide-react'
 import logo from '../Logo.jpeg'
 
 const WHATSAPP_URL = import.meta.env.VITE_WHATSAPP_URL || 'https://wa.me/'
 const INSTAGRAM_URL = import.meta.env.VITE_INSTAGRAM_URL || '#contato'
 const FACEBOOK_URL = import.meta.env.VITE_FACEBOOK_URL || '#contato'
+
+const InstagramIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.7" r=".8" fill="currentColor" stroke="none"/></svg>
+const FacebookIcon = () => <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.7 21v-8h2.8l.42-3.2H13.7V7.75c0-.93.26-1.56 1.62-1.56h1.73V3.33c-.3-.04-1.33-.13-2.53-.13-2.5 0-4.22 1.53-4.22 4.34V9.8H7.47V13h2.83v8h3.4Z"/></svg>
 
 type FormData = {
   objetivo: string; valor: number; prazo: string; entrada: string;
@@ -196,7 +199,7 @@ function App() {
       <section className="final-cta"><div className="final-grid" /><img src={logo} alt="" /><div><span className="kicker">O PRÓXIMO PASSO COMEÇA AQUI</span><h2>Planos grandes pedem<br /><em>decisões inteligentes.</em></h2><button className="primary" onClick={() => goTo('simulador')}>Simular agora <ArrowRight size={18} /></button></div></section>
       <footer id="contato">
         <div className="footer-main">
-          <div className="footer-about"><div className="footer-brand"><img src={logo} alt="R2 Group" /><span>R2 <b>GROUP</b></span></div><p>Estratégia e atendimento para ajudar você a organizar o próximo passo.</p><div className="footer-social"><a href={INSTAGRAM_URL} target={INSTAGRAM_URL.startsWith('http') ? '_blank' : undefined} rel="noreferrer" aria-label="Instagram"><Instagram /></a><a href={FACEBOOK_URL} target={FACEBOOK_URL.startsWith('http') ? '_blank' : undefined} rel="noreferrer" aria-label="Facebook"><Facebook /></a></div></div>
+          <div className="footer-about"><div className="footer-brand"><img src={logo} alt="R2 Group" /><span>R2 <b>GROUP</b></span></div><p>Estratégia e atendimento para ajudar você a organizar o próximo passo.</p><div className="footer-social"><a href={INSTAGRAM_URL} target={INSTAGRAM_URL.startsWith('http') ? '_blank' : undefined} rel="noreferrer" aria-label="Instagram"><InstagramIcon /></a><a href={FACEBOOK_URL} target={FACEBOOK_URL.startsWith('http') ? '_blank' : undefined} rel="noreferrer" aria-label="Facebook"><FacebookIcon /></a></div></div>
           <div className="footer-column"><span className="footer-title">CONTATO</span><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><Phone /> Telefone a confirmar</a><a href="mailto:"><Mail /> E-mail a confirmar</a></div>
           <div className="footer-column"><span className="footer-title">ONDE ESTAMOS</span><div><MapPin /> <span>Endereço comercial<br /><small>A confirmar</small></span></div></div>
           <div className="footer-action"><span className="footer-title">FALE COM A R2</span><p>Quer conversar sobre seu objetivo?</p><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle /> Chamar no WhatsApp <ArrowRight /></a></div>
