@@ -69,14 +69,11 @@ function App() {
     setLoading(true); setError('')
     const endpoint = import.meta.env.VITE_LEAD_ENDPOINT
     try {
-      if (endpoint) {
-        const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, origem: 'simulador_r2_group', received_at: new Date().toISOString(), source_url: window.location.href }) })
-        if (!response.ok) throw new Error('Não foi possível enviar agora.')
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 650))
-      }
+      if (!endpoint) throw new Error('O canal de atendimento está em configuração. Tente novamente em breve.')
+      const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, origem: 'simulador_r2_group', received_at: new Date().toISOString(), source_url: window.location.href }) })
+      if (!response.ok) throw new Error('Não foi possível enviar agora.')
       setSent(true)
-    } catch { setError('Algo saiu do previsto. Tente novamente em instantes.') }
+    } catch (cause) { setError(cause instanceof Error ? cause.message : 'Algo saiu do previsto. Tente novamente em instantes.') }
     finally { setLoading(false) }
   }
 
