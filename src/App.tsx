@@ -17,7 +17,7 @@ const InstagramIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="current
 const FacebookIcon = () => <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.7 21v-8h2.8l.42-3.2H13.7V7.75c0-.93.26-1.56 1.62-1.56h1.73V3.33c-.3-.04-1.33-.13-2.53-.13-2.5 0-4.22 1.53-4.22 4.34V9.8H7.47V13h2.83v8h3.4Z"/></svg>
 
 type FormData = {
-  objetivo: string; valor: number; prazo: string; entrada: number; parcela: number;
+  objetivo: string; valor: number; prazo: string; entrada: string; parcela: number;
   nome: string; whatsapp: string; cidade: string
 }
 
@@ -36,7 +36,7 @@ function App() {
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [data, setData] = useState<FormData>({ objetivo: '', valor: 250000, prazo: '', entrada: 500, parcela: 500, nome: '', whatsapp: '', cidade: '' })
+  const [data, setData] = useState<FormData>({ objetivo: '', valor: 250000, prazo: '', entrada: '', parcela: 500, nome: '', whatsapp: '', cidade: '' })
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -54,7 +54,7 @@ function App() {
 
   const valid = useMemo(() => {
     if (step === 0) return Boolean(data.objetivo)
-    if (step === 1) return data.valor >= 30000 && Boolean(data.prazo) && data.entrada >= 500 && data.parcela >= 500
+    if (step === 1) return data.valor >= 30000 && Boolean(data.prazo) && Boolean(data.entrada) && data.parcela >= 500
     return data.nome.trim().length > 0 && data.whatsapp.replace(/\D/g, '').length >= 10 && data.cidade.trim().length > 2
   }, [data, step])
 
@@ -135,9 +135,8 @@ function App() {
                     <div className="value-display"><small>VALOR DESEJADO</small><strong>{money.format(data.valor)}</strong></div>
                     <input className="range" type="range" min="30000" max="2000000" step="10000" value={data.valor} onChange={e => setData({ ...data, valor: Number(e.target.value) })} />
                     <div className="range-labels"><span>R$ 30 mil</span><span>R$ 2 milhões</span></div>
-                    <div className="field-row timing-row"><label><span>Quando pretende realizar?</span><select value={data.prazo} onChange={e => setData({ ...data, prazo: e.target.value })}><option value="">Selecione</option><option>O quanto antes</option><option>De 3 a 6 meses</option><option>De 6 a 12 meses</option><option>Mais de 1 ano</option></select><ChevronDown /></label></div>
+                    <div className="field-row timing-row"><label><span>Quando pretende realizar?</span><select value={data.prazo} onChange={e => setData({ ...data, prazo: e.target.value })}><option value="">Selecione</option><option>O quanto antes</option><option>De 3 a 6 meses</option><option>De 6 a 12 meses</option><option>Mais de 1 ano</option></select><ChevronDown /></label><label><span>Possui valor de entrada?</span><select value={data.entrada} onChange={e => setData({ ...data, entrada: e.target.value })}><option value="">Selecione</option><option>Sim</option><option>Não</option><option>Ainda estou avaliando</option></select><ChevronDown /></label></div>
                     <div className="financial-ranges">
-                      <label className="mini-range"><span><small>Valor de entrada</small><strong>{money.format(data.entrada)}</strong></span><input className="range" type="range" min="500" max="20000" step="500" value={data.entrada} onChange={e => setData({ ...data, entrada: Number(e.target.value) })} /><i><b>R$ 500</b><b>R$ 20 mil</b></i></label>
                       <label className="mini-range"><span><small>Qual a parcela mensal ideal para você?</small><strong>{money.format(data.parcela)}</strong></span><input className="range" type="range" min="500" max="20000" step="500" value={data.parcela} onChange={e => setData({ ...data, parcela: Number(e.target.value) })} /><i><b>R$ 500</b><b>R$ 20 mil</b></i></label>
                     </div>
                   </>}
