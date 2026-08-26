@@ -9,9 +9,9 @@ import {
 } from 'lucide-react'
 import logo from '../Logo.jpeg'
 
-const WHATSAPP_URL = import.meta.env.VITE_WHATSAPP_URL || 'https://wa.me/'
-const INSTAGRAM_URL = import.meta.env.VITE_INSTAGRAM_URL || '#contato'
-const FACEBOOK_URL = import.meta.env.VITE_FACEBOOK_URL || '#contato'
+const WHATSAPP_URL = import.meta.env.VITE_WHATSAPP_URL || 'https://wa.me/553498706663'
+const INSTAGRAM_URL = import.meta.env.VITE_INSTAGRAM_URL || 'https://www.instagram.com/r2_group_ofc'
+const FACEBOOK_URL = import.meta.env.VITE_FACEBOOK_URL || 'https://www.facebook.com/profile.php?id=61582081132980&locale=pt_BR'
 
 const InstagramIcon = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.7" r=".8" fill="currentColor" stroke="none"/></svg>
 const FacebookIcon = () => <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.7 21v-8h2.8l.42-3.2H13.7V7.75c0-.93.26-1.56 1.62-1.56h1.73V3.33c-.3-.04-1.33-.13-2.53-.13-2.5 0-4.22 1.53-4.22 4.34V9.8H7.47V13h2.83v8h3.4Z"/></svg>
@@ -27,6 +27,14 @@ const goals = [
   { value: 'Veículo', label: 'Meu veículo', icon: CarFront },
   { value: 'Investimento', label: 'Investir', icon: TrendingUp },
   { value: 'Capital', label: 'Capital para negócio', icon: Building2 },
+]
+const contemplatedClients = [
+  '/clientes/video-01.mp4',
+  '/clientes/video-02.mp4',
+  '/clientes/video-03.mp4',
+  '/clientes/video-04.mp4',
+  '/clientes/video-05.mp4',
+  '/clientes/video-06.mp4',
 ]
 const fade = { hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0, transition: { duration: .75, ease: [0.16, 1, 0.3, 1] as const } } }
 
@@ -159,17 +167,13 @@ function App() {
       <section className="contemplados" aria-labelledby="contemplados-title">
         <motion.div className="contemplados-heading" initial="hidden" whileInView="visible" viewport={{ once: true, amount: .35 }} variants={fade}>
           <div><span className="kicker">CONQUISTAS R2</span><h2 id="contemplados-title">Clientes contemplados.<br /><em>Planos que saíram do papel.</em></h2></div>
-          <p>Este espaço reúne as histórias de quem avançou com a R2 Group. Novos registros serão adicionados conforme os materiais oficiais forem disponibilizados.</p>
+          <p>Histórias reais de clientes que avançaram com a R2 Group e transformaram seus planos em conquistas.</p>
         </motion.div>
         <div className="contemplados-grid">
-          {[
-            { n: '01', title: 'Uma nova conquista', type: 'História de cliente' },
-            { n: '02', title: 'Um plano realizado', type: 'Resultado R2' },
-            { n: '03', title: 'O próximo capítulo', type: 'Pode ser o seu' },
-          ].map((item, index) => (
-            <motion.article key={item.n} initial={{ opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .3 }} transition={{ delay: index * .1, duration: .65 }}>
-              <div className="contemplado-visual"><img src={logo} alt="" /><span>{item.n}</span><i>R2 GROUP</i></div>
-              <div className="contemplado-copy"><small>{item.type}</small><h3>{item.title}</h3><span>Conteúdo oficial em atualização</span></div>
+          {contemplatedClients.map((video, index) => (
+            <motion.article key={video} initial={{ opacity: 0, y: 34 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: .3 }} transition={{ delay: (index % 3) * .1, duration: .65 }}>
+              <div className="contemplado-visual"><video src={video} controls preload="metadata" playsInline aria-label={`Cliente contemplado ${index + 1}`} /><span>{String(index + 1).padStart(2, '0')}</span><i>R2 GROUP</i></div>
+              <div className="contemplado-copy"><small>CLIENTE CONTEMPLADO</small><h3>Mais uma conquista R2</h3><span>História real de quem tirou o plano do papel</span></div>
             </motion.article>
           ))}
         </div>
@@ -201,7 +205,7 @@ function App() {
       <footer id="contato">
         <div className="footer-main">
           <div className="footer-about"><div className="footer-brand"><img src={logo} alt="R2 Group" /><span>R2 <b>GROUP</b></span></div><p>Estratégia e atendimento para ajudar você a organizar o próximo passo.</p><div className="footer-social"><a href={INSTAGRAM_URL} target={INSTAGRAM_URL.startsWith('http') ? '_blank' : undefined} rel="noreferrer" aria-label="Instagram"><InstagramIcon /></a><a href={FACEBOOK_URL} target={FACEBOOK_URL.startsWith('http') ? '_blank' : undefined} rel="noreferrer" aria-label="Facebook"><FacebookIcon /></a></div></div>
-          <div className="footer-column"><span className="footer-title">CONTATO</span><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><Phone /> Telefone a confirmar</a><a href="mailto:"><Mail /> E-mail a confirmar</a></div>
+          <div className="footer-column"><span className="footer-title">CONTATO</span><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><Phone /> (34) 9870-6663</a><a href="mailto:"><Mail /> E-mail a confirmar</a></div>
           <div className="footer-column"><span className="footer-title">ONDE ESTAMOS</span><div><MapPin /> <span>Endereço comercial<br /><small>A confirmar</small></span></div></div>
           <div className="footer-action"><span className="footer-title">FALE COM A R2</span><p>Quer conversar sobre seu objetivo?</p><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle /> Chamar no WhatsApp <ArrowRight /></a></div>
         </div>
