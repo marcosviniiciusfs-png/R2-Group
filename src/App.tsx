@@ -101,7 +101,7 @@ function App() {
 
   const submit = async () => {
     setLoading(true); setError('')
-    const endpoint = import.meta.env.VITE_LEAD_ENDPOINT
+    const endpoint = import.meta.env.VITE_LEAD_ENDPOINT || 'https://r2-group-lead-api.marcosviniicius-fs.workers.dev'
     try {
       if (!endpoint) throw new Error('O canal de atendimento está em configuração. Tente novamente em breve.')
       const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, origem: 'simulador_r2_group', received_at: new Date().toISOString(), source_url: window.location.href }) })

@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "r2-group-lead-api",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-08-26",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "CONVEX_WEBHOOK_URL": "https://app.convexcrm.com.br/api/webhooks/integrations/5bd240c05bf14756936eb079660c4781"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}
