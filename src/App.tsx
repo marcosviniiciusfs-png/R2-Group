@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Lenis from 'lenis'
 import {
   ArrowDown, ArrowLeft, ArrowRight, Building2, CarFront, Check,
-  ChevronDown, CircleDollarSign, Clock3, Home, Landmark, LockKeyhole,
+  CircleDollarSign, Clock3, Home, Landmark, LockKeyhole,
   Menu, ShieldCheck, Sparkles, TrendingUp, UserRound, X,
   MapPin, Mail, Phone, MessageCircle,
 } from 'lucide-react'
@@ -21,12 +21,35 @@ type FormData = {
   nome: string; whatsapp: string; cidade: string
 }
 
-const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 })
 const goals = [
   { value: 'Imóvel', label: 'Meu imóvel', icon: Home },
   { value: 'Veículo', label: 'Meu veículo', icon: CarFront },
   { value: 'Investimento', label: 'Investir', icon: TrendingUp },
   { value: 'Capital', label: 'Capital para negócio', icon: Building2 },
+]
+const creditOptions = [
+  { label: 'Até R$ 100 mil', detail: 'Para um valor menor', value: 100000, icon: CircleDollarSign },
+  { label: 'R$ 100 mil a R$ 250 mil', detail: 'Uma faixa intermediária', value: 250000, icon: Landmark },
+  { label: 'R$ 250 mil a R$ 500 mil', detail: 'Para um objetivo maior', value: 500000, icon: Building2 },
+  { label: 'Acima de R$ 500 mil', detail: 'Para valores mais altos', value: 750000, icon: TrendingUp },
+]
+const entryOptions = [
+  { label: 'Até R$ 5 mil', detail: 'Tenho pouco separado agora', badge: 'Até 5k', value: 5000 },
+  { label: 'R$ 5 mil a R$ 15 mil', detail: 'Tenho uma reserva inicial', badge: '5–15k', value: 15000 },
+  { label: 'R$ 15 mil a R$ 40 mil', detail: 'Tenho uma entrada maior', badge: '15–40k', value: 40000 },
+  { label: 'Acima de R$ 40 mil', detail: 'Consigo separar mais de R$ 40 mil', badge: '40k+', value: 80000 },
+]
+const installmentOptions = [
+  { label: 'Até R$ 1 mil', detail: 'Uma parcela mais leve', badge: 'Até 1k', value: 1000 },
+  { label: 'R$ 1 mil a R$ 3 mil', detail: 'Uma faixa intermediária', badge: '1–3k', value: 3000 },
+  { label: 'R$ 3 mil a R$ 6 mil', detail: 'Posso investir um pouco mais por mês', badge: '3–6k', value: 6000 },
+  { label: 'Acima de R$ 6 mil', detail: 'Busco acelerar minha conquista', badge: '6k+', value: 10000 },
+]
+const timingOptions = [
+  { label: 'O quanto antes', detail: 'Quero começar logo', badge: 'Agora' },
+  { label: 'De 3 a 6 meses', detail: 'Quero me organizar primeiro', badge: '3–6m' },
+  { label: 'De 6 a 12 meses', detail: 'Estou planejando com calma', badge: '6–12m' },
+  { label: 'Mais de 1 ano', detail: 'Ainda estou avaliando as opções', badge: '12m+' },
 ]
 const contemplatedClients = [
   '/clientes/video-01.mp4',
@@ -44,7 +67,7 @@ function App() {
   const [sent, setSent] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [data, setData] = useState<FormData>({ objetivo: '', valor: 250000, prazo: '', entrada: 500, parcela: 500, nome: '', whatsapp: '', cidade: '' })
+  const [data, setData] = useState<FormData>({ objetivo: '', valor: 0, prazo: '', entrada: 0, parcela: 0, nome: '', whatsapp: '', cidade: '' })
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -62,7 +85,10 @@ function App() {
 
   const valid = useMemo(() => {
     if (step === 0) return Boolean(data.objetivo)
-    if (step === 1) return data.valor >= 30000 && Boolean(data.prazo) && data.entrada >= 500 && data.parcela >= 500
+    if (step === 1) return data.valor > 0
+    if (step === 2) return data.entrada > 0
+    if (step === 3) return data.parcela > 0
+    if (step === 4) return Boolean(data.prazo)
     return data.nome.trim().length > 0 && data.whatsapp.replace(/\D/g, '').length >= 10 && data.cidade.trim().length > 2
   }, [data, step])
 
@@ -129,8 +155,8 @@ function App() {
 
         <motion.div className="sim-card" initial="hidden" whileInView="visible" viewport={{ once: true, amount: .2 }} variants={fade}>
           {!sent ? <>
-            <div className="progress-top"><span>ETAPA {step + 1} DE 3</span><strong>{['Seu objetivo', 'Seu cenário', 'Seus dados'][step]}</strong></div>
-            <div className="progress"><i style={{ width: `${((step + 1) / 3) * 100}%` }} /></div>
+            <div className="progress-top"><span>ETAPA {step + 1} DE 6</span><strong>{['Seu objetivo', 'Valor desejado', 'Entrada disponível', 'Parcela mensal', 'Prazo', 'Seus dados'][step]}</strong></div>
+            <div className="progress"><i style={{ width: `${((step + 1) / 6) * 100}%` }} /></div>
             <div className="form-body">
               <AnimatePresence mode="wait">
                 <motion.div className="step" key={step} initial={{ opacity: 0, x: 20, filter: 'blur(5px)' }} animate={{ opacity: 1, x: 0, filter: 'blur(0)' }} exit={{ opacity: 0, x: -20, filter: 'blur(5px)' }} transition={{ duration: .3 }}>
@@ -139,17 +165,22 @@ function App() {
                     <div className="goal-grid">{goals.map(item => <button key={item.value} className={data.objetivo === item.value ? 'goal selected' : 'goal'} onClick={() => setData({ ...data, objetivo: item.value })}><item.icon /><span>{item.label}</span><i>{data.objetivo === item.value && <Check size={14} />}</i></button>)}</div>
                   </>}
                   {step === 1 && <>
-                    <div className="step-icon"><CircleDollarSign /></div><h3>Qual valor aproxima você desse objetivo?</h3><p className="step-sub">Ajuste a estimativa e conte um pouco sobre o momento da compra.</p>
-                    <div className="value-display"><small>VALOR DESEJADO</small><strong>{money.format(data.valor)}</strong></div>
-                    <input className="range" type="range" min="30000" max="2000000" step="10000" value={data.valor} onChange={e => setData({ ...data, valor: Number(e.target.value) })} />
-                    <div className="range-labels"><span>R$ 30 mil</span><span>R$ 2 milhões</span></div>
-                    <div className="field-row timing-row"><label><span>Quando pretende realizar?</span><select value={data.prazo} onChange={e => setData({ ...data, prazo: e.target.value })}><option value="">Selecione</option><option>O quanto antes</option><option>De 3 a 6 meses</option><option>De 6 a 12 meses</option><option>Mais de 1 ano</option></select><ChevronDown /></label></div>
-                    <div className="financial-ranges">
-                      <label className="mini-range"><span><small>Qual valor de entrada você pretende utilizar?</small><strong>{money.format(data.entrada)}</strong></span><input className="range" type="range" min="500" max="20000" step="500" value={data.entrada} onChange={e => setData({ ...data, entrada: Number(e.target.value) })} /><i><b>R$ 500</b><b>R$ 20 mil</b></i></label>
-                      <label className="mini-range"><span><small>Qual a parcela mensal ideal para você?</small><strong>{money.format(data.parcela)}</strong></span><input className="range" type="range" min="500" max="20000" step="500" value={data.parcela} onChange={e => setData({ ...data, parcela: Number(e.target.value) })} /><i><b>R$ 500</b><b>R$ 20 mil</b></i></label>
-                    </div>
+                    <div className="step-icon"><CircleDollarSign /></div><h3>Qual valor você está buscando?</h3><p className="step-sub">Pode ser aproximado. Escolha a faixa mais próxima.</p>
+                    <div className="choice-stack">{creditOptions.map(item => <button key={item.value} className={data.valor === item.value ? 'choice-card selected' : 'choice-card'} onClick={() => setData({ ...data, valor: item.value })}><span className="choice-icon"><item.icon /></span><span className="choice-copy"><strong>{item.label}</strong><small>{item.detail}</small></span><i>{data.valor === item.value && <Check size={14} />}</i></button>)}</div>
                   </>}
                   {step === 2 && <>
+                    <div className="step-icon"><Landmark /></div><h3>Quanto você consegue separar de entrada?</h3><p className="step-sub">Escolha uma faixa que faça sentido hoje.</p>
+                    <div className="choice-stack">{entryOptions.map(item => <button key={item.value} className={data.entrada === item.value ? 'choice-card selected' : 'choice-card'} onClick={() => setData({ ...data, entrada: item.value })}><span className="choice-icon"><Landmark /></span><span className="choice-copy"><strong>{item.label}</strong><small>{item.detail}</small></span><b className="choice-badge">{item.badge}</b></button>)}</div>
+                  </>}
+                  {step === 3 && <>
+                    <div className="step-icon"><CircleDollarSign /></div><h3>Qual parcela mensal fica ideal para você?</h3><p className="step-sub">Marque a faixa que cabe melhor no seu planejamento.</p>
+                    <div className="choice-stack">{installmentOptions.map(item => <button key={item.value} className={data.parcela === item.value ? 'choice-card selected' : 'choice-card'} onClick={() => setData({ ...data, parcela: item.value })}><span className="choice-icon"><CircleDollarSign /></span><span className="choice-copy"><strong>{item.label}</strong><small>{item.detail}</small></span><b className="choice-badge">{item.badge}</b></button>)}</div>
+                  </>}
+                  {step === 4 && <>
+                    <div className="step-icon"><Clock3 /></div><h3>Quando você pretende realizar?</h3><p className="step-sub">Escolha o prazo mais próximo do seu momento.</p>
+                    <div className="choice-stack">{timingOptions.map(item => <button key={item.label} className={data.prazo === item.label ? 'choice-card selected' : 'choice-card'} onClick={() => setData({ ...data, prazo: item.label })}><span className="time-chip">{item.badge}</span><span className="choice-copy"><strong>{item.label}</strong><small>{item.detail}</small></span><i>{data.prazo === item.label && <Check size={14} />}</i></button>)}</div>
+                  </>}
+                  {step === 5 && <>
                     <div className="step-icon"><UserRound /></div><h3>Para quem preparamos esta análise?</h3><p className="step-sub">Preencha seus dados para receber um atendimento direcionado.</p>
                     <div className="contact-fields"><label><span>Nome completo</span><input autoComplete="name" placeholder="Como podemos chamar você?" value={data.nome} onChange={e => setData({ ...data, nome: e.target.value })} /></label><div className="field-row"><label><span>WhatsApp</span><input inputMode="tel" autoComplete="tel" placeholder="(00) 00000-0000" value={data.whatsapp} onChange={e => setData({ ...data, whatsapp: maskPhone(e.target.value) })} /></label><label><span>Cidade</span><input autoComplete="address-level2" placeholder="Onde você mora?" value={data.cidade} onChange={e => setData({ ...data, cidade: e.target.value })} /></label></div></div>
                     <p className="privacy"><LockKeyhole size={13} /> Seus dados serão usados apenas para este atendimento.</p>
@@ -158,7 +189,7 @@ function App() {
                 </motion.div>
               </AnimatePresence>
             </div>
-            <div className="form-footer"><button className="back" disabled={step === 0} onClick={() => setStep(step - 1)}><ArrowLeft size={17} /> Voltar</button><button className="next" disabled={!valid || loading} onClick={() => step < 2 ? setStep(step + 1) : submit()}>{loading ? 'Enviando...' : step === 2 ? 'Receber minha análise' : 'Continuar'} {!loading && <ArrowRight size={17} />}</button></div>
+            <div className="form-footer"><button className="back" disabled={step === 0} onClick={() => setStep(step - 1)}><ArrowLeft size={17} /> Voltar</button><button className="next" disabled={!valid || loading} onClick={() => step < 5 ? setStep(step + 1) : submit()}>{loading ? 'Enviando...' : step === 5 ? 'Receber minha análise' : 'Continuar'} {!loading && <ArrowRight size={17} />}</button></div>
           </> : <motion.div className="success" initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }}><div className="success-icon"><Check /></div><span className="kicker">SIMULAÇÃO CONCLUÍDA</span><h3>Obrigado, {data.nome.split(' ')[0]}.</h3><p>Recebemos suas informações. O próximo passo é uma conversa para entender os detalhes do seu objetivo.</p><button className="primary" onClick={() => { setSent(false); setStep(0) }}>Fazer nova simulação</button></motion.div>}
         </motion.div>
         <div className="trust-row"><span><LockKeyhole /> Ambiente seguro</span><span><Clock3 /> Resposta rápida</span><span><ShieldCheck /> Sem compromisso</span></div>
