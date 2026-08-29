@@ -22,5 +22,5 @@
 @media(max-width:620px){.financial-ranges{grid-template-columns:1fr;gap:22px}.form-body{min-height:560px}.timing-row label{max-width:none}.choice-card{grid-template-columns:46px 1fr auto;min-height:67px;padding:9px}.choice-icon,.time-chip{width:44px;height:44px}.choice-copy strong{font-size:13px}.choice-copy small{font-size:10px}.choice-badge{min-width:48px;font-size:10px}}
 .contemplado-visual video{width:100%;height:100%;object-fit:cover;display:block;background:#000}.contemplado-visual video~span,.contemplado-visual video~i{pointer-events:none}.contemplado-visual:has(video):after{pointer-events:none;background:linear-gradient(to top,rgba(11,11,11,.28),transparent 32%)}
 
-/* Formato quadrado (1080x1080) para os clientes contemplados. */
-.contemplado-visual{width:100%;height:auto;aspect-ratio:1/1}
+/* Formato vertical original dos vídeos de clientes contemplados. */
+.contemplado-visual{width:100%;height:auto;aspect-ratio:9/16}
